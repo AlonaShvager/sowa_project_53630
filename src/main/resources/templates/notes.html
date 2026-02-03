@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Notes</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h2, h3 {
+            margin-top: 0;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        form div {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 8px 14px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 25px 0;
+        }
+
+        .error {
+            color: #b00020;
+            font-size: 13px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        li strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        li p {
+            margin: 0 0 10px 0;
+        }
+
+        .delete-form {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="top-bar">
+        <h2>My Notes</h2>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+
+    <hr>
+
+    <h3>Create Note</h3>
+
+    <form th:action="@{/notes}" th:object="${noteRequest}" method="post">
+
+        <div>
+            <label>Title</label>
+            <input type="text" th:field="*{title}"/>
+            <div class="error" th:errors="*{title}"></div>
+        </div>
+
+        <div>
+            <label>Content</label>
+            <textarea th:field="*{content}"></textarea>
+            <div class="error" th:errors="*{content}"></div>
+        </div>
+
+        <button type="submit">Save</button>
+    </form>
+
+    <hr>
+
+    <h3>Your Notes</h3>
+
+    <ul>
+        <li th:each="note : ${notes}">
+            <strong th:text="${note.title}"></strong>
+            <p th:text="${note.content}"></p>
+
+            <form class="delete-form"
+                  th:action="@{/notes/delete/{id}(id=${note.id})}"
+                  method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+    </ul>
+
+</div>
+
+</body>
+</html>
